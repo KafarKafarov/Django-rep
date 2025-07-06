@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Анализ документа</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label>ID документа:</label>
+    <input type="number" name="doc_id" required>
+    <button type="submit">Анализировать</button>
+  </form>
+  {% if result %}
+    <h3>Результат:</h3>
+    <pre>{{ result }}</pre>
+  {% endif %}
+  <p><a href="{% url 'docs_app:list_docs' %}">← Вернуться к списку</a></p>
+{% endblock %}

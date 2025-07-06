@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# virtualenv
+.venv/
+venv/
+
+media/
+staticfiles/
+*.log
+
+.env
+
+.idea/
+*.iml

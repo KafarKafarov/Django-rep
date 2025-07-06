@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Ваша корзина</h1>
+
+  {% if orders %}
+    <table border="1" cellpadding="5">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Документ</th>
+          <th>Сумма</th>
+          <th>Статус</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.doc.id }}</td>
+            <td>{{ order.order_price|floatformat:2 }} руб.</td>
+            <td>{% if order.payment %}Оплачен{% else %}Не оплачен{% endif %}</td>
+            <td>
+              {% if not order.payment %}
+                <a href="{% url 'docs_app:cart_pay' order.id %}">Оплатить</a>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Корзина пуста.</p>
+  {% endif %}
+
+  <p><a href="{% url 'docs_app:list_docs' %}">← Назад к документам</a></p>
+{% endblock %}

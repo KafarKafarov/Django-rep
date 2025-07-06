@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Получить текст документа</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="doc_id">ID документа:</label>
+    <input type="number" id="doc_id" name="doc_id" required>
+    <button type="submit">Получить текст</button>
+  </form>
+
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  {% if text %}
+    <h3>Текст документа:</h3>
+    <pre>{{ text }}</pre>
+  {% endif %}
+
+  <p><a href="{% url 'docs_app:list_docs' %}">← Вернуться к списку документов</a></p>
+{% endblock %}

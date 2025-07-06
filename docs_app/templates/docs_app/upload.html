@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Загрузить документ</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Загрузить</button>
+  </form>
+  {% if error %}
+    <p style="color:red">{{ error }}</p>
+  {% endif %}
+  <p><a href="{% url 'docs_app:list_docs' %}">← Вернуться к списку</a></p>
+{% endblock %}

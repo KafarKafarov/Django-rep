@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Загруженные документы</h1>
+
+  <div style="margin-bottom: 20px;">
+    <a href="{% url 'docs_app:upload_doc' %}">Загрузить документ</a> |
+    <a href="{% url 'docs_app:analyse_doc' %}">Анализировать документ</a> |
+    <a href="{% url 'docs_app:get_text' %}">Получить текст</a>
+    {% if user.is_staff %}
+      | <a href="{% url 'docs_app:delete_doc' %}">Удалить документ</a>
+    {% endif %}
+    | <a href="{% url 'logout' %}">Выйти</a>
+  </div>
+
+  {% if error %}
+    <p style="color:red">{{ error }}</p>
+  {% endif %}
+
+  {% if docs %}
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      {% for doc in docs %}
+        <div style="width: 30%; border: 1px solid #ccc; padding: 10px; text-align: center;">
+          <p><strong>ID:</strong> {{ doc.id }}</p>
+
+          <img src="{{ fastapi_url }}/document/{{ doc.id }}/file"
+               alt="Doc {{ doc.id }}"
+               style="max-width: 100%; height: auto;" />
+
+          <p><strong>Путь:</strong> {{ doc.path }}</p>
+          <p><strong>Дата:</strong> {{ doc.date|default:"—" }}</p>
+          <p><strong>Текст:</strong> {{ doc.text|truncatechars:100 }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Документы не найдены.</p>
+  {% endif %}
+{% endblock %}
