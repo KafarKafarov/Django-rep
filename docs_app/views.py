@@ -1,14 +1,17 @@
 import os
 import requests
 from django.conf import settings
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import UploadForm
 from .models import Docs, UserToDocs, Cart, Price
 from django.contrib.admin.views.decorators import staff_member_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 
 FASTAPI_URL = settings.FASTAPI_URL
+
 
 
 @login_required
@@ -27,6 +30,8 @@ def list_docs(request):
         'error': error,
         'fastapi_url': settings.FASTAPI_URL
     })
+
+
 
 
 @login_required
@@ -170,9 +175,41 @@ def cart_add(request):
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def cart_pay(request, pk):
     order = get_object_or_404(Cart, pk=pk, user=request.user)
-    if not order.payment:
-        order.payment = True
-        order.save()
-    return redirect('docs_app:cart_list')
+
+    if request.method == 'POST':
+        if not order.payment:
+            order.payment = True
+            order.save()
+        return redirect('docs_app:cart_list')
+
+    return render(request, 'docs_app/pay.html', {'order': order})
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def cart_pay(request, pk):
+
+    order = get_object_or_404(Cart, pk=pk, user=request.user)
+    if request.method == 'POST':
+       if not order.payment:
+            order.payment = True
+            order.save()
+       return redirect('docs_app:cart_list')
+    return render(request, 'docs_app/pay.html', {'order': order})
+
+
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('docs_app:list_docs')
+    else:
+        form = UserCreationForm()
+    return render(request, 'auth/register.html', {'form': form})

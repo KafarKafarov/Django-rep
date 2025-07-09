@@ -21,13 +21,16 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+from docs_app.views import register
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/docs/', permanent=False)),
     path('admin/', admin.site.urls),
     path('docs/', include(('docs_app.urls', 'docs_app'), namespace='docs_app')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register/', register, name='register'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

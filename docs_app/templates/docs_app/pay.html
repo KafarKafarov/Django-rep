@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Оплата заказа №{{ order.id }}</h1>
+
+  <div style="border:1px solid #ccc; padding:20px; max-width:400px;">
+    <p><strong>Документ ID:</strong> {{ order.doc.id }}</p>
+    <p><strong>Размер файла:</strong> {{ order.doc.size_file|floatformat:2 }} КБ</p>
+    <p><strong>Сумма к оплате:</strong> {{ order.order_price|floatformat:2 }} руб.</p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" style="padding:10px 20px; font-size:1rem;">
+      Подтвердить оплату
+    </button>
+  </form>
+
+  <p><a href="{% url 'docs_app:cart_list' %}">← Назад в корзину</a></p>
+{% endblock %}
